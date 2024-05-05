@@ -728,40 +728,6 @@ def repair(source_code, index, model, tokenizer, device='cpu'):
     return fixed_code_list
 
 
-
-def main():
-    # Example usage
-    csv_file_path = '/home/xiyang/Documents/VulRepair/M1_VulRepair_PL-NL/MickyMike/cvefixes_bigvul/train.csv'
-    model_path = '/home/xiyang/Documents/VulRepair/M1_VulRepair_PL-NL/MickyMike/VulRepair'
-    tokenizer_path = '/home/xiyang/Documents/VulRepair/M1_VulRepair_PL-NL/MickyMike/VulRepair'
-
-    model = T5ForConditionalGeneration.from_pretrained(model_path)
-    tokenizer = RobertaTokenizer.from_pretrained(tokenizer_path)
-    tokenizer.add_tokens(["<S2SV_StartBug>", "<S2SV_EndBug>", "<S2SV_blank>", "<S2SV_ModStart>", "<S2SV_ModEnd>"])
-    model.resize_token_embeddings(len(tokenizer))  # Adjust the model to account for new tokens
-    device = 'cpu'
-    model.to(device)
-
-    df = pd.read_csv(csv_file_path)
-
-    for index, row in df.iterrows():
-        source_code = row['source']
-        target_code = row['target']
-        link = row['original_address']
-        pattern = r'^CWE-20(?!0)'
-        if source_code.startswith("CWE-476"):
-            repair_476(source_code, link, index, model, tokenizer, device)
-        elif source_code.startswith("CWE-369"):
-            repair_369(source_code, link, index, model, tokenizer, device)
-        elif source_code.startswith("CWE-617"):
-            repair_617(source_code, link, index, model, tokenizer, device)
-        else:
-            repair(source_code, index, model, tokenizer, device)
-
-        if source_code.startswith("CWE-125"):
-            fixed_code_list = repair_125(source_code, target_code, link, index, model, tokenizer, device)
-        if re.match(pattern, source_code):
-            fixed_code_list = repair_125(source_code, target_code, link, index, model, tokenizer, device)
 def main():
     csv_file_path1 = '/home/xiyang/Documents/VulRepair/data/fine_tune_data/whole.csv'
     df1 = pd.read_csv(csv_file_path1)
