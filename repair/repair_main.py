@@ -729,7 +729,7 @@ def repair(source_code, index, model, tokenizer, device='cpu'):
 
 
 def main():
-    csv_file_path1 = '/home/xiyang/Documents/VulRepair/data/fine_tune_data/whole.csv'
+    csv_file_path1 = './whole.csv'
     df1 = pd.read_csv(csv_file_path1)
   
     count_476 = 0
